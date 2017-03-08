@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Initialize parse
+        Parse.initialize(
+            with: ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "Instagram"
+                configuration.clientKey = "sdafosduhp983ofjdef238r71"
+                configuration.server = "https://peaceful-woodland-49532.herokuapp.com/parse"
+            })
+        )
+        
+        // Check if there's a current user
+        print("Current user: " + PFUser.current().debugDescription)
+        if PFUser.current() != nil {
+            print("There is a current user")
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "PostsNavigationController")
+            window?.rootViewController = vc
+        } else {
+            print("First time here :/")
+        }
+
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "userDidLogout"), object: nil, queue: OperationQueue.main, using: {(Notification) -> Void in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateInitialViewController()
+            self.window?.rootViewController = vc
+        })
+        
         return true
     }
 
