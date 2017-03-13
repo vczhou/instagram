@@ -35,8 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "PostsNavigationController")
             window?.rootViewController = vc
-        } else {
-            print("First time here :/")
         }
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "userDidLogout"), object: nil, queue: OperationQueue.main, using: {(Notification) -> Void in

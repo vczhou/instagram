@@ -9,12 +9,35 @@
 import UIKit
 import Parse
 
-class PostsViewController: UIViewController {
-
+class PostsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    var posts: [Post]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        // Construct PFQuery
+        let query = PFQuery(className: "Post")
+        query.order(byDescending: "createdAt")
+        query.includeKey("author")
+        query.limit = 20
+        
+        // Fetch data asynchronously
+        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) -> Void in
+            if let posts = posts {
+                // do something with the data fetched
+                self.posts = Post.postsWithArray(pfobjects: posts)
+                self.tableView.reloadData()
+            } else {
+                // handle error
+                print(error?.localizedDescription ?? "Failed to find posts")
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,9 +51,29 @@ class PostsViewController: UIViewController {
         }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "userDidLogout"), object: nil)
         print("I've logged out")
-        print("Current user: " + PFUser.current().debugDescription)
     }
 
+    @IBAction func onCaptureButton(_ sender: Any) {
+        print("Going to capture")
+        self.performSegue(withIdentifier: "capture", sender: self)        
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let posts = posts{
+            return posts.count
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostCell
+        
+        cell.post = posts[indexPath.row]
+        
+        return cell
+    }
+    
     /*
     // MARK: - Navigation
 
