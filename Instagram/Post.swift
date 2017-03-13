@@ -11,14 +11,16 @@ import Parse
 
 class Post: NSObject {
     
-    var imagePFFile: PFFile?
+    var pfObject: PFObject?
+    var media: PFFile?
     var author: PFUser?
     var caption: String?
     var likeCount: Int?
     var commentsCount: Int?
     
     init(object: PFObject) {
-        self.imagePFFile = object["media"] as? PFFile
+        self.pfObject = object
+        self.media = object["media"] as? PFFile
         self.author = object["author"] as? PFUser
         self.caption = object["caption"] as? String
         self.likeCount = (object["likesCount"] as? Int) ?? 0

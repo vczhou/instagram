@@ -7,10 +7,25 @@
 //
 
 import UIKit
+import Parse
+import ParseUI
 
 class PostCell: UITableViewCell {
     
-    var post : Post!
+    @IBOutlet weak var postImageView: PFImageView!
+    @IBOutlet weak var captionLabel: UILabel!
+    
+    var post : Post! {
+        didSet{
+            //let pfObj = post.pfObject
+            self.postImageView.file = post.media
+            self.postImageView.loadInBackground()
+            
+            self.captionLabel.text = post.caption
+            print(post.caption ?? "no caption")
+            print(captionLabel.text ?? "lols what")
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()

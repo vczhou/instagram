@@ -43,7 +43,7 @@ class CaptureViewController: UIViewController, UIImagePickerControllerDelegate, 
         let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
         
         // Do something with the images (based on your use case)
-        let image = Post.resize(image: editedImage, newSize: CGSize(width: 300, height: 300))
+        let image = Post.resize(image: editedImage, newSize: CGSize(width: 350, height: 350))
         tapSelectButton.setTitle("", for: .normal)
         selectedImageView.image = image
         

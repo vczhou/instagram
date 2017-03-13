@@ -60,6 +60,7 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let posts = posts{
+            print("There are \(posts.count) pics to load")
             return posts.count
         } else {
             return 0
@@ -68,8 +69,11 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostCell
-        
         cell.post = posts[indexPath.row]
+        
+        /*let post = posts[indexPath.row]
+        cell.postImageView.file = post.media
+        cell.postImageView.loadInBackground()*/
         
         return cell
     }
