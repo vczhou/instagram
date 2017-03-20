@@ -21,28 +21,36 @@ class PostsViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.dataSource = self
         tableView.delegate = self
         
-        // Construct PFQuery
-        let query = PFQuery(className: "Post")
-        query.order(byDescending: "createdAt")
-        query.includeKey("author")
-        query.limit = 20
-        
-        // Fetch data asynchronously
-        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) -> Void in
-            if let posts = posts {
-                // do something with the data fetched
-                self.posts = Post.postsWithArray(pfobjects: posts)
-                self.tableView.reloadData()
-            } else {
-                // handle error
-                print(error?.localizedDescription ?? "Failed to find posts")
-            }
-        }
+        fetchPosts()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchPosts()
+    }
+    
+    func fetchPosts() {
+        // Construct PFQuery
+        let query = PFQuery(className: "Post")
+        query.order(byDescending: "createdAt")
+        query.includeKey("author")
+        query.limit = 20
+    
+        // Fetch data asynchronously
+        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) -> Void in
+        if let posts = posts {
+            // do something with the data fetched
+            self.posts = Post.postsWithArray(pfobjects: posts)
+            self.tableView.reloadData()
+        } else {
+            // handle error
+            print(error?.localizedDescription ?? "Failed to find posts")
+            }
+        }
     }
     
     @IBAction func onLogoutButton(_ sender: Any) {
